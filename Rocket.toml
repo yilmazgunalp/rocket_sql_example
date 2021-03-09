@@ -1,0 +1,3 @@
+[global.databases]
+genapi_heroku_test = { url = "postgresql://yg:PJPL2EXX@localhost:5432/genapi_heroku_test" }
+
