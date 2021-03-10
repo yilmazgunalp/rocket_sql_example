@@ -7,7 +7,7 @@
 
 
 pub mod models;
-pub mod posts;
+pub mod apples;
 pub mod schema;
 pub mod db;
 
@@ -18,11 +18,19 @@ use rocket::config::{Config, Environment};
 
 use std::env;
 
-embed_migrations!("migrations");
 
 
+embed_migrations!();
 
 fn main() {
+    let connection = db::establish_connection();
+    
+    // This will run the necessary migrations.
+    match embedded_migrations::run(&connection) {
+        Ok(_) => println!("yahoo"),
+        Err(e) => eprintln!("Oh noes, we don't know which era we're in! :( \n  {}", e),
+    }
+
     let port = env::var("PORT").unwrap().parse::<u16>().expect("$PORT must be set");
 
     let config = Config::build(Environment::Production)
@@ -33,7 +41,7 @@ fn main() {
     rocket::custom(config)
     .manage(db::establish_connection_pool())
     .mount("/", routes![
-        posts::list,
-        posts::new
+        apples::list,
+        apples::new
         ]).launch();
 }

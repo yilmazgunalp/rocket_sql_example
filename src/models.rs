@@ -2,7 +2,7 @@
 use crate::schema::*;
 use serde::*;
 #[derive(Debug, Queryable, Serialize, Deserialize)]
-pub struct Post {
+pub struct Apple {
     pub id: i32,
     pub title: String,
     pub body: String,
@@ -10,8 +10,8 @@ pub struct Post {
 }
 
 #[derive(Debug, Insertable, AsChangeset, Serialize, Deserialize)]
-#[table_name="posts"]
-pub struct NewPost {
+#[table_name="apples"]
+pub struct NewApple {
     pub title: String,
     pub body: String,
     pub published: bool,
