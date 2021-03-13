@@ -4,10 +4,10 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate diesel_migrations;
 
-pub mod models;
-pub mod bikes;
 pub mod schema;
+pub mod models;
 pub mod db;
+pub mod bikes;
 
 use rocket::config::{Config, Environment};
 
@@ -33,6 +33,8 @@ fn main() {
     .manage(db::establish_connection_pool())
     .mount("/", routes![
         bikes::list,
-        bikes::new
+        bikes::new,
+        bikes::update,
+        bikes::delete,
         ]).launch();
 }
