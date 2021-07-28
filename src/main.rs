@@ -1,13 +1,16 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate diesel;
-#[macro_use] extern crate diesel_migrations;
+#[macro_use]
+extern crate rocket;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate diesel_migrations;
 
-pub mod schema;
-pub mod models;
-pub mod db;
 pub mod bikes;
+pub mod db;
+pub mod models;
+pub mod schema;
 
 use rocket::config::{Config, Environment};
 
@@ -17,24 +20,27 @@ embed_migrations!();
 
 fn main() {
     let connection = db::establish_connection();
-    
+
     match embedded_migrations::run(&connection) {
-        Ok(_) => println!("yahoo"),
+        Ok(_) => println!("yahoo heeya"),
         Err(e) => eprintln!("Oh noes, we don't know which era we're in! :( \n  {}", e),
     }
 
-    let port = env::var("PORT").unwrap().parse::<u16>().expect("$PORT must be set");
+    let port = env::var("PORT")
+        .unwrap()
+        .parse::<u16>()
+        .expect("$PORT must be set");
 
     let config = Config::build(Environment::Production)
-    .port(port)
-    .finalize().expect("Configuration error");
+        .port(port)
+        .finalize()
+        .expect("Configuration error");
 
     rocket::custom(config)
-    .manage(db::establish_connection_pool())
-    .mount("/", routes![
-        bikes::list,
-        bikes::new,
-        bikes::update,
-        bikes::delete,
-        ]).launch();
+        .manage(db::establish_connection_pool())
+        .mount(
+            "/",
+            routes![bikes::list, bikes::new, bikes::update, bikes::delete,],
+        )
+        .launch();
 }
